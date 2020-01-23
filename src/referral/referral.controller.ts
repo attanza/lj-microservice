@@ -1,7 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import {
+  IApiCollection,
+  IApiItem,
+} from 'src/shared/interfaces/response-parser.interface';
+import {
+  apiCreated,
+  apiDeleted,
+  apiItem,
+  apiUpdated,
+} from '../helpers/responseParser';
+import { ResourcePagination } from '../shared/interfaces/resource-pagination.interface';
 import { MongoIdPipe } from '../shared/pipes/mongoId.pipe';
 import { CreateRefferalDto, UpdateRefferalDto } from './referral.dto';
-import { IRefferal } from './referral.interface';
 import { ReferralService } from './referral.service';
 
 @Controller('api/refferals')
@@ -9,21 +30,23 @@ export class ReferralController {
   constructor(private refferalService: ReferralService) {}
 
   @Get()
-  async index(): Promise<IRefferal[]> {
-    return this.refferalService.index();
+  async index(@Query() query: ResourcePagination): Promise<IApiCollection> {
+    return this.refferalService.index(query);
   }
 
   @Get(':id')
   @UsePipes(ValidationPipe)
-  async show(@Param() param: MongoIdPipe): Promise<IRefferal> {
+  async show(@Param() param: MongoIdPipe): Promise<IApiItem> {
     const { id } = param;
-    return await this.refferalService.show(id);
+    const data = await this.refferalService.show(id);
+    return apiItem('Referral', data);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  async store(@Body() refferalDto: CreateRefferalDto): Promise<IRefferal> {
-    return await this.refferalService.store(refferalDto);
+  async store(@Body() refferalDto: CreateRefferalDto): Promise<IApiItem> {
+    const data = await this.refferalService.store(refferalDto);
+    return apiCreated('Referral', data);
   }
 
   @Put(':id')
@@ -31,15 +54,17 @@ export class ReferralController {
   async update(
     @Param() param: MongoIdPipe,
     @Body() refferalDto: UpdateRefferalDto,
-  ): Promise<IRefferal> {
+  ): Promise<IApiItem> {
     const { id } = param;
-    return await this.refferalService.update(id, refferalDto);
+    const data = await this.refferalService.update(id, refferalDto);
+    return apiUpdated('Referral', data);
   }
 
-  @Delete()
+  @Delete(':id')
   @UsePipes(ValidationPipe)
-  async destroy(@Param() param: MongoIdPipe): Promise<string> {
+  async destroy(@Param() param: MongoIdPipe): Promise<IApiItem> {
     const { id } = param;
-    return await this.refferalService.destroy(id);
+    await this.refferalService.destroy(id);
+    return apiDeleted('Referral');
   }
 }
