@@ -11,10 +11,10 @@ export default async (
   query?: ResourcePagination,
   searchable?: string[],
 ): Promise<IApiCollection> => {
-  const page = parseInt(query.page) || 1;
-  const limit = parseInt(query.limit) || 2;
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 2;
   const sortBy = query.sortBy || 'createdAt';
-  const sortMode = query.sortMode || 1;
+  const sortMode = Number(query.sortMode) || 1;
   const search = query.search || '';
   let options = {};
   if (search !== '' && searchable.length > 0) {
@@ -22,8 +22,8 @@ export default async (
       options = { ...options, [s]: { $regex: search, $options: 'i' } };
     });
   }
-  const totalDocs = await model.countDocuments(options);
-  const totalPages = Math.ceil(totalDocs / limit);
+  const totalDocs: number = await model.countDocuments(options);
+  const totalPages: number = Math.ceil(totalDocs / limit);
   const meta: IMeta = {
     status: 200,
     message: `${modelName} Collection`,

@@ -8,17 +8,16 @@ export class SeederService {
   constructor(private refferalService: ReferralService) {}
 
   async seedRefferal() {
-  
     for (let i = 0; i < 25; i++) {
-      const data: CreateRefferalDto = this.getRefferalData()
-      await this.refferalService.store(data)        
+      const data: CreateRefferalDto = this.getRefferalData();
+      await this.refferalService.store(data);
     }
   }
 
   private getRefferalData(): CreateRefferalDto {
-    const faker = new Chance()
+    const faker = new Chance();
     const now = moment();
-      const tommorow = now.add(1, 'days').toDate()
+    const tommorow = now.add(1, 'days').toDate();
     return {
       code: faker.bb_pin(),
       description: faker.sentence(),
@@ -26,10 +25,8 @@ export class SeederService {
         id: faker.bb_pin(),
         email: faker.email(),
       },
-      products: [
-        {id: faker.bb_pin(), name: faker.word()}
-      ],
+      products: [{ id: faker.bb_pin(), name: faker.word() }],
       validUntil: tommorow,
-    }
+    };
   }
 }

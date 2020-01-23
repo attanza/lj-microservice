@@ -3,10 +3,10 @@ import { SeederService } from './seeder.service';
 
 @Controller('api/seeder')
 export class SeederController {
-    constructor(private seederService: SeederService){}
+  constructor(private seederService: SeederService) {}
 
-    @Get()
-    async index() {
-        return this.seederService.seedRefferal()
-    }
+  @Get()
+  async index() {
+    return this.seederService.seedRefferal();
+  }
 }

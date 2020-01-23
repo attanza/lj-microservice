@@ -9,7 +9,10 @@ const MONGO_OPTIONS = {
 };
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URI + process.env.DB_NAME, MONGO_OPTIONS),
+    MongooseModule.forRoot(
+      process.env.MONGO_URI + process.env.DB_NAME,
+      MONGO_OPTIONS,
+    ),
     ReferralModule,
     SeederModule,
   ],
