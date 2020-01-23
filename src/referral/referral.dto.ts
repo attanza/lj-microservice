@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsDateString,
+  IsInt,
   IsNotEmpty,
   IsObject,
   IsOptional,
@@ -29,6 +30,10 @@ export class CreateRefferalDto {
   @IsObject()
   creator: IUser;
 
+  @IsOptional()
+  @IsInt()
+  maxConsumer: number;
+
   @IsNotEmpty()
   @IsDateString()
   validUntil: Date;
@@ -52,6 +57,10 @@ export class UpdateRefferalDto {
   @IsOptional()
   @IsObject()
   creator: IUser;
+
+  @IsOptional()
+  @IsInt()
+  maxConsumer: number;
 
   @IsOptional()
   @IsArray()

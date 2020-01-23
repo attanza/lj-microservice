@@ -14,6 +14,10 @@ export const RefferalSchema = new mongoose.Schema(
       id: String,
       email: String,
     },
+    maxConsumer: {
+      type: Number,
+      default: 1,
+    },
     consumer: [
       {
         id: String,

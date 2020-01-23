@@ -11,26 +11,27 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import {
-  IApiCollection,
-  IApiItem,
-} from 'src/shared/interfaces/response-parser.interface';
-import {
   apiCreated,
   apiDeleted,
   apiItem,
   apiUpdated,
 } from '../helpers/responseParser';
-import { ResourcePagination } from '../shared/interfaces/resource-pagination.interface';
+import {
+  IApiCollection,
+  IApiItem,
+} from '../shared/interfaces/response-parser.interface';
 import { MongoIdPipe } from '../shared/pipes/mongoId.pipe';
+import { ResourcePaginationPipe } from '../shared/pipes/resource-pagination.pipe';
 import { CreateRefferalDto, UpdateRefferalDto } from './referral.dto';
 import { ReferralService } from './referral.service';
 
-@Controller('api/refferals')
+@Controller('api/referrals')
 export class ReferralController {
   constructor(private refferalService: ReferralService) {}
 
   @Get()
-  async index(@Query() query: ResourcePagination): Promise<IApiCollection> {
+  @UsePipes(ValidationPipe)
+  async index(@Query() query: ResourcePaginationPipe): Promise<IApiCollection> {
     return this.refferalService.index(query);
   }
 

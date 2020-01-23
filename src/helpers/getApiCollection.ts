@@ -1,27 +1,46 @@
 import { Model } from 'mongoose';
-import { ResourcePagination } from 'src/shared/interfaces/resource-pagination.interface';
 import {
   IApiCollection,
   IMeta,
-} from 'src/shared/interfaces/response-parser.interface';
+} from '../shared/interfaces/response-parser.interface';
+import {
+  ResourcePaginationPipe,
+  SortMode,
+} from '../shared/pipes/resource-pagination.pipe';
 
 export default async (
   modelName: string,
   model: Model<any>,
-  query?: ResourcePagination,
-  searchable?: string[],
+  query?: ResourcePaginationPipe,
+  regexSearchable?: string[],
+  keyValueSearchable?: string[],
 ): Promise<IApiCollection> => {
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 2;
   const sortBy = query.sortBy || 'createdAt';
-  const sortMode = Number(query.sortMode) || 1;
+  const sortMode = SortMode[query.sortMode];
   const search = query.search || '';
+
+  const { fieldKey, fieldValue, dateField, dateStart, dateEnd } = query;
   let options = {};
-  if (search !== '' && searchable.length > 0) {
-    searchable.map(s => {
+
+  // Regex Search
+  if (search !== '' && regexSearchable.length > 0) {
+    regexSearchable.map(s => {
       options = { ...options, [s]: { $regex: search, $options: 'i' } };
     });
   }
+
+  // key value search
+  if (fieldKey && keyValueSearchable.includes(fieldKey) && fieldValue) {
+    options = { ...options, [fieldKey]: fieldValue };
+  }
+
+  // Date Range Search
+  if (dateField && dateStart && dateEnd) {
+    options = { ...options, [dateField]: { $gte: dateStart, $lte: dateEnd } };
+  }
+
   const totalDocs: number = await model.countDocuments(options);
   const totalPages: number = Math.ceil(totalDocs / limit);
   const meta: IMeta = {
@@ -34,6 +53,7 @@ export default async (
     nextPage: totalPages > page ? page + 1 : null,
     prevPage: page > 1 ? page - 1 : null,
   };
+
   const data = await model
     .find(options)
     .sort({ [sortBy]: sortMode })

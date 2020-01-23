@@ -5,6 +5,7 @@ export interface IRefferal extends Document {
   description: string;
   products: IProduct[];
   creator: IUser;
+  maxConsumer: number;
   consumer: IUser[];
   validUntil: Date;
   isExpired: boolean;

@@ -25,6 +25,7 @@ export class SeederService {
         id: faker.bb_pin(),
         email: faker.email(),
       },
+      maxConsumer: 1,
       products: [{ id: faker.bb_pin(), name: faker.word() }],
       validUntil: tommorow,
     };
