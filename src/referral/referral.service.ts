@@ -50,7 +50,7 @@ export class ReferralService {
     referalDto: Partial<UpdateRefferalDto>,
   ): Promise<IRefferal> {
     const data = await this.getById(id);
-    if (referalDto.consumer.length > data.maxConsumer) {
+    if (referalDto.consumer && referalDto.consumer.length > data.maxConsumer) {
       throw new HttpException('Consumer is over limit', HttpStatus.BAD_REQUEST);
     }
     Object.keys(referalDto).map(key => (data[key] = referalDto[key]));

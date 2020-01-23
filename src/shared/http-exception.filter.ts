@@ -18,6 +18,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
+    console.log('exception', exception);
+
     const meta = {
       status,
       path: request.url,

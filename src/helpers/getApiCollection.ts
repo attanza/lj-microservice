@@ -16,7 +16,7 @@ export default async (
   keyValueSearchable?: string[],
 ): Promise<IApiCollection> => {
   const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 2;
+  const limit = Number(query.limit) || 10;
   const sortBy = query.sortBy || 'createdAt';
   const sortMode = SortMode[query.sortMode];
   const search = query.search || '';
