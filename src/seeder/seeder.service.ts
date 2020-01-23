@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import Chance from 'chance';
 import moment from 'moment';
-import { CreateRefferalDto } from 'src/referral/refferal.dto';
-import { ReferralService } from '../referral/refferal.service';
+import { CreateRefferalDto } from 'src/referral/referral.dto';
+import { ReferralService } from '../referral/referral.service';
 @Injectable()
 export class SeederService {
   constructor(private refferalService: ReferralService) {}

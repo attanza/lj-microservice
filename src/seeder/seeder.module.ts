@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ReferralModule } from '../referral/refferal.module';
+import { ReferralModule } from '../referral/referral.module';
 import { SeederController } from './seeder.controller';
 import { SeederService } from './seeder.service';
 

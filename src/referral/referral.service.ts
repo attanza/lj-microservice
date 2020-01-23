@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateRefferalDto, UpdateRefferalDto } from './refferal.dto';
-import { IRefferal } from './refferal.interface';
+import { CreateRefferalDto, UpdateRefferalDto } from './referral.dto';
+import { IRefferal } from './referral.interface';
 
 @Injectable()
 export class ReferralService {

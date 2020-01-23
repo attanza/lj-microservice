@@ -1,14 +1,5 @@
-import {
-  IsArray,
-  IsDate,
-  IsNotEmpty,
-  IsObject,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
-import { IProduct, IUser } from './refferal.interface';
+import { IsArray, IsDate, IsNotEmpty, IsObject, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IProduct, IUser } from './referral.interface';
 
 export class CreateRefferalDto {
   @IsNotEmpty()

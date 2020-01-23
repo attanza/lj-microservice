@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
-import { MongoIdPipe } from '../pipes/mongoId.pipe';
-import { CreateRefferalDto, UpdateRefferalDto } from './refferal.dto';
-import { IRefferal } from './refferal.interface';
-import { ReferralService } from './refferal.service';
+import { MongoIdPipe } from '../shared/pipes/mongoId.pipe';
+import { CreateRefferalDto, UpdateRefferalDto } from './referral.dto';
+import { IRefferal } from './referral.interface';
+import { ReferralService } from './referral.service';
 
 @Controller('api/refferals')
 export class ReferralController {

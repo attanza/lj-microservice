@@ -22,7 +22,6 @@ export const RefferalSchema = new mongoose.Schema(
       },
     ],
     validUntil: Date,
-
     isExpired: {
       type: Boolean,
       default: false,
