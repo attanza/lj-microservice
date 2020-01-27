@@ -26,9 +26,11 @@ export default async (
 
   // Regex Search
   if (search !== '' && regexSearchable.length > 0) {
+    const regexSearch = [];
     regexSearchable.map(s => {
-      options = { ...options, [s]: { $regex: search, $options: 'i' } };
+      regexSearch.push({ [s]: { $regex: search, $options: 'i' } });
     });
+    options = { $or: regexSearch };
   }
 
   // key value search
@@ -40,6 +42,8 @@ export default async (
   if (dateField && dateStart && dateEnd) {
     options = { ...options, [dateField]: { $gte: dateStart, $lte: dateEnd } };
   }
+
+  console.log('options', options);
 
   const totalDocs: number = await model.countDocuments(options);
   const totalPages: number = Math.ceil(totalDocs / limit);

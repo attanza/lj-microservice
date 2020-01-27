@@ -14,7 +14,7 @@ export class ActivityService {
   ) {}
 
   async index(query: ResourcePaginationPipe): Promise<IApiCollection> {
-    const regexSearchable = ['ip, browser, activity'];
+    const regexSearchable = ['ip', 'browser', 'activity', 'user.email'];
     const keyValueSearchable = [];
     return await getApiCollection(
       'Activity',
