@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ReferralModule } from './referral/referral.module';
 import { SeederModule } from './seeder/seeder.module';
+import { ActivityModule } from './activity/activity.module';
 
 const MONGO_OPTIONS = {
   useNewUrlParser: true,
@@ -15,6 +16,7 @@ const MONGO_OPTIONS = {
     ),
     ReferralModule,
     SeederModule,
+    ActivityModule,
   ],
 })
 export class AppModule {}
