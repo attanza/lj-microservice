@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-export const RefferalSchema = new mongoose.Schema(
+export const ReferralSchema = new mongoose.Schema(
   {
     code: String,
     description: String,
@@ -16,7 +16,7 @@ export const RefferalSchema = new mongoose.Schema(
     },
     maxConsumer: {
       type: Number,
-      default: 1,
+      default: 0,
     },
     consumer: [
       {

@@ -5,12 +5,12 @@ import { Model } from 'mongoose';
 import { ResourcePaginationPipe } from 'src/shared/pipes/resource-pagination.pipe';
 import getApiCollection from '../helpers/getApiCollection';
 import { IApiCollection } from '../shared/interfaces/response-parser.interface';
-import { CreateRefferalDto, UpdateRefferalDto } from './referral.dto';
-import { IRefferal } from './referral.interface';
+import { CreateReferralDto, UpdateReferralDto } from './referral.dto';
+import { IReferral } from './referral.interface';
 @Injectable()
 export class ReferralService {
   constructor(
-    @InjectModel('Refferal') private refferalModel: Model<IRefferal>,
+    @InjectModel('Referral') private referralModel: Model<IReferral>,
   ) {}
 
   async index(query: ResourcePaginationPipe): Promise<IApiCollection> {
@@ -18,42 +18,46 @@ export class ReferralService {
     const keyValueSearchable = ['code', 'maxConsumer', 'isExpired'];
     return await getApiCollection(
       'Referral',
-      this.refferalModel,
+      this.referralModel,
       query,
       regexSearchable,
       keyValueSearchable,
     );
   }
 
-  async show(id: string): Promise<IRefferal> {
+  async show(id: string): Promise<IReferral> {
     const data = await this.getById(id);
     await this.checkExpiry(data);
     return data;
   }
 
-  async store(referalDto: CreateRefferalDto): Promise<IRefferal> {
-    const { code } = referalDto;
-    const found = await this.refferalModel.findOne({ code, isExpired: false });
+  async store(referralDto: CreateReferralDto): Promise<IReferral> {
+    const { code } = referralDto;
+    const found = await this.referralModel.findOne({ code, isExpired: false });
     if (found) {
       throw new HttpException(
         'Referral code already exists',
         HttpStatus.BAD_REQUEST,
       );
     }
-    const newData = new this.refferalModel(referalDto);
+    const newData = new this.referralModel(referralDto);
     await newData.save();
     return newData;
   }
 
   async update(
     id: string,
-    referalDto: Partial<UpdateRefferalDto>,
-  ): Promise<IRefferal> {
+    referralDto: Partial<UpdateReferralDto>,
+  ): Promise<IReferral> {
     const data = await this.getById(id);
-    if (referalDto.consumer && referalDto.consumer.length > data.maxConsumer) {
+    if (
+      data.maxConsumer > 0 &&
+      referralDto.consumer &&
+      referralDto.consumer.length > data.maxConsumer
+    ) {
       throw new HttpException('Consumer is over limit', HttpStatus.BAD_REQUEST);
     }
-    Object.keys(referalDto).map(key => (data[key] = referalDto[key]));
+    Object.keys(referralDto).map(key => (data[key] = referralDto[key]));
     await this.checkExpiry(data);
     return data;
   }
@@ -64,26 +68,28 @@ export class ReferralService {
     return 'Data Deleted';
   }
 
-  private async getById(id: string): Promise<IRefferal> {
-    const found = await this.refferalModel.findById(id);
+  private async getById(id: string): Promise<IReferral> {
+    const found = await this.referralModel.findById(id);
     if (!found) {
       throw new HttpException('Data not found', HttpStatus.NOT_FOUND);
     }
     return found;
   }
 
-  private async checkExpiry(data: IRefferal): Promise<IRefferal> {
+  private async checkExpiry(data: IReferral): Promise<IReferral> {
     if (!data.isExpired) {
       const now = moment();
       const expiry = moment(data.validUntil);
       if (now >= expiry) {
         data.isExpired = true;
       }
-      if (data.consumer.length >= data.maxConsumer) {
-        data.isExpired = true;
+      if (data.maxConsumer && data.maxConsumer !== 0 && data.consumer) {
+        if (data.consumer.length >= data.maxConsumer) {
+          data.isExpired = true;
+        }
       }
+      await data.save();
     }
-    await data.save();
     return data;
   }
 }

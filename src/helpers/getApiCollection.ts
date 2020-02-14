@@ -43,8 +43,6 @@ export default async (
     options = { ...options, [dateField]: { $gte: dateStart, $lte: dateEnd } };
   }
 
-  console.log('options', options);
-
   const totalDocs: number = await model.countDocuments(options);
   const totalPages: number = Math.ceil(totalDocs / limit);
   const meta: IMeta = {

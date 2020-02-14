@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import Chance from 'chance';
 import moment from 'moment';
-import { CreateRefferalDto } from 'src/referral/referral.dto';
+import { CreateReferralDto } from 'src/referral/referral.dto';
 import { ReferralService } from '../referral/referral.service';
 @Injectable()
 export class SeederService {
-  constructor(private refferalService: ReferralService) {}
+  constructor(private referralService: ReferralService) {}
 
-  async seedRefferal() {
+  async seedReferral() {
     for (let i = 0; i < 25; i++) {
-      const data: CreateRefferalDto = this.getRefferalData();
-      await this.refferalService.store(data);
+      const data: CreateReferralDto = this.getReferralData();
+      await this.referralService.store(data);
     }
   }
 
-  private getRefferalData(): CreateRefferalDto {
+  private getReferralData(): CreateReferralDto {
     const faker = new Chance();
     const now = moment();
-    const tommorow = now.add(1, 'days').toDate();
+    const tomorrow = now.add(1, 'days').toDate();
     return {
       code: faker.bb_pin(),
       description: faker.sentence(),
@@ -27,7 +27,7 @@ export class SeederService {
       },
       maxConsumer: 1,
       products: [{ id: faker.bb_pin(), name: faker.word() }],
-      validUntil: tommorow,
+      validUntil: tomorrow,
     };
   }
 }

@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { IProduct, IUser } from './referral.interface';
 
-export class CreateRefferalDto {
+export class CreateReferralDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
@@ -22,7 +22,7 @@ export class CreateRefferalDto {
   @MaxLength(255)
   description: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsArray()
   products: IProduct[];
 
@@ -39,7 +39,7 @@ export class CreateRefferalDto {
   validUntil: Date;
 }
 
-export class UpdateRefferalDto {
+export class UpdateReferralDto {
   @IsOptional()
   @IsString()
   @MinLength(3)

@@ -7,6 +7,6 @@ export class SeederController {
 
   @Get()
   async index() {
-    return this.seederService.seedRefferal();
+    return this.seederService.seedReferral();
   }
 }

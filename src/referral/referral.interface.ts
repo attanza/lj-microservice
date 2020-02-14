@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-export interface IRefferal extends Document {
+export interface IReferral extends Document {
   code: string;
   description: string;
   products: IProduct[];
