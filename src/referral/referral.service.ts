@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Validator } from 'class-validator';
 import moment from 'moment';
 import { Model } from 'mongoose';
 import { ResourcePaginationPipe } from 'src/shared/pipes/resource-pagination.pipe';
@@ -9,9 +10,12 @@ import { CreateReferralDto, UpdateReferralDto } from './referral.dto';
 import { IReferral } from './referral.interface';
 @Injectable()
 export class ReferralService {
+  validator: any;
   constructor(
     @InjectModel('Referral') private referralModel: Model<IReferral>,
-  ) {}
+  ) {
+    this.validator = new Validator();
+  }
 
   async index(query: ResourcePaginationPipe): Promise<IApiCollection> {
     const regexSearchable = ['code'];
@@ -27,7 +31,9 @@ export class ReferralService {
 
   async show(id: string): Promise<IReferral> {
     const data = await this.getById(id);
-    await this.checkExpiry(data);
+    if (!data) {
+      throw new HttpException('Data not found', HttpStatus.NOT_FOUND);
+    }
     return data;
   }
 
@@ -69,11 +75,16 @@ export class ReferralService {
   }
 
   private async getById(id: string): Promise<IReferral> {
-    const found = await this.referralModel.findById(id);
-    if (!found) {
-      throw new HttpException('Data not found', HttpStatus.NOT_FOUND);
+    let data: IReferral;
+    if (this.validator.isMongoId(id)) {
+      data = await this.referralModel.findById(id);
+    } else {
+      data = await this.referralModel.findOne({ code: id });
     }
-    return found;
+    if (data) {
+      data = await this.checkExpiry(data);
+    }
+    return data;
   }
 
   private async checkExpiry(data: IReferral): Promise<IReferral> {
@@ -91,5 +102,21 @@ export class ReferralService {
       await data.save();
     }
     return data;
+  }
+
+  async checkExist(id: string): Promise<boolean> {
+    let found: IReferral;
+    found = await this.getById(id);
+    if (!found) {
+      return false;
+    }
+    if (found.isExpired) {
+      return false;
+    }
+    return true;
+  }
+
+  async getByCode(code: string): Promise<IReferral> {
+    return await this.referralModel.findOne({ code }).lean();
   }
 }

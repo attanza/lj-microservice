@@ -23,19 +23,20 @@ import {
 import { MongoIdPipe } from '../shared/pipes/mongoId.pipe';
 import { ResourcePaginationPipe } from '../shared/pipes/resource-pagination.pipe';
 import { CreateReferralDto, UpdateReferralDto } from './referral.dto';
+import { IReferral } from './referral.interface';
 import { ReferralService } from './referral.service';
 
-@Controller('api/referrals')
+@Controller('api')
 export class ReferralController {
   constructor(private referralService: ReferralService) {}
 
-  @Get()
+  @Get('referrals')
   @UsePipes(ValidationPipe)
   async index(@Query() query: ResourcePaginationPipe): Promise<IApiCollection> {
     return this.referralService.index(query);
   }
 
-  @Get(':id')
+  @Get('/referrals/:id')
   @UsePipes(ValidationPipe)
   async show(@Param() param: MongoIdPipe): Promise<IApiItem> {
     const { id } = param;
@@ -43,14 +44,24 @@ export class ReferralController {
     return apiItem('Referral', data);
   }
 
-  @Post()
+  @Get('referrals/:code/check')
+  async checkExist(@Param('code') code: string): Promise<boolean> {
+    return await this.referralService.checkExist(code);
+  }
+
+  @Get('/referral/:code')
+  async getByCode(@Param('code') code: string): Promise<IReferral> {
+    return await this.referralService.getByCode(code);
+  }
+
+  @Post('/referrals')
   @UsePipes(ValidationPipe)
   async store(@Body() referralDto: CreateReferralDto): Promise<IApiItem> {
     const data = await this.referralService.store(referralDto);
     return apiCreated('Referral', data);
   }
 
-  @Put(':id')
+  @Put('/referrals/:id')
   @UsePipes(ValidationPipe)
   async update(
     @Param() param: MongoIdPipe,
@@ -61,7 +72,7 @@ export class ReferralController {
     return apiUpdated('Referral', data);
   }
 
-  @Delete(':id')
+  @Delete('/referrals/:id')
   @UsePipes(ValidationPipe)
   async destroy(@Param() param: MongoIdPipe): Promise<IApiItem> {
     const { id } = param;
