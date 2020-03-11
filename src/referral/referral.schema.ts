@@ -25,6 +25,7 @@ export const ReferralSchema = new mongoose.Schema(
         id: String,
         email: String,
         date: Date,
+        other: String,
       },
     ],
     validUntil: Date,

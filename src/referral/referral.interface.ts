@@ -22,4 +22,5 @@ export interface IUser {
   id: string;
   email: string;
   date?: Date;
+  other?: string;
 }
