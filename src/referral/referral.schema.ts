@@ -6,6 +6,7 @@ export const ReferralSchema = new mongoose.Schema(
     description: String,
     products: [
       {
+        _id: false,
         id: String,
         name: String,
       },
@@ -20,6 +21,7 @@ export const ReferralSchema = new mongoose.Schema(
     },
     consumer: [
       {
+        _id: false,
         id: String,
         email: String,
         date: Date,

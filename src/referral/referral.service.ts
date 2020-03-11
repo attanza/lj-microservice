@@ -69,8 +69,7 @@ export class ReferralService {
   }
 
   async destroy(id: string): Promise<string> {
-    const data = await this.getById(id);
-    await data.remove();
+    await this.referralModel.deleteOne({ _id: id });
     return 'Data Deleted';
   }
 
