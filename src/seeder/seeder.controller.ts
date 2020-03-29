@@ -7,6 +7,7 @@ export class SeederController {
 
   @Get()
   async index() {
-    return this.seederService.seedReferral();
+    await this.seederService.seedReferral();
+    return 'seeding completed';
   }
 }

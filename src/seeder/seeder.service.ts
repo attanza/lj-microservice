@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import Chance from 'chance';
 import moment from 'moment';
 import { CreateReferralDto } from 'src/referral/referral.dto';
@@ -8,10 +8,13 @@ export class SeederService {
   constructor(private referralService: ReferralService) {}
 
   async seedReferral() {
-    for (let i = 0; i < 25; i++) {
+    Logger.log('Seeding Referral');
+    await this.referralService.truncate();
+    for (let i = 0; i < 3; i++) {
       const data: CreateReferralDto = this.getReferralData();
       await this.referralService.store(data);
     }
+    Logger.log('Seeding Referral finished');
   }
 
   private getReferralData(): CreateReferralDto {

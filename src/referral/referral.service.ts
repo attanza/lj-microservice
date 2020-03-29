@@ -118,4 +118,8 @@ export class ReferralService {
   async getByCode(code: string): Promise<IReferral> {
     return await this.referralModel.findOne({ code }).lean();
   }
+
+  async truncate() {
+    await this.referralModel.deleteMany({});
+  }
 }
