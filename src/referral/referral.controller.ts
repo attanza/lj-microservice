@@ -1,25 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
-import {
-  apiCreated,
-  apiDeleted,
-  apiItem,
-  apiUpdated,
-} from '../helpers/responseParser';
-import {
-  IApiCollection,
-  IApiItem,
-} from '../shared/interfaces/response-parser.interface';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { apiCreated, apiDeleted, apiItem, apiUpdated } from '../helpers/responseParser';
+import { IApiCollection, IApiItem } from '../shared/interfaces/response-parser.interface';
 import { MongoIdPipe } from '../shared/pipes/mongoId.pipe';
 import { ResourcePaginationPipe } from '../shared/pipes/resource-pagination.pipe';
 import { CreateReferralDto, UpdateReferralDto } from './referral.dto';

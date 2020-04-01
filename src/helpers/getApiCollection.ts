@@ -1,12 +1,6 @@
 import { Model } from 'mongoose';
-import {
-  IApiCollection,
-  IMeta,
-} from '../shared/interfaces/response-parser.interface';
-import {
-  ResourcePaginationPipe,
-  SortMode,
-} from '../shared/pipes/resource-pagination.pipe';
+import { IApiCollection, IMeta } from '../shared/interfaces/response-parser.interface';
+import { ResourcePaginationPipe, SortMode } from '../shared/pipes/resource-pagination.pipe';
 
 export default async (
   modelName: string,
@@ -21,7 +15,7 @@ export default async (
   const sortMode = SortMode[query.sortMode];
   const search = query.search || '';
 
-  const { fieldKey, fieldValue, dateField, dateStart, dateEnd } = query;
+  const { fieldKey, fieldValue, dateField, dateStart, dateEnd, select = '' } = query;
   let options = {};
 
   // Regex Search
@@ -57,7 +51,7 @@ export default async (
   };
 
   const data = await model
-    .find(options)
+    .find(options, select)
     .sort({ [sortBy]: sortMode })
     .skip(limit * page - limit)
     .limit(limit);
