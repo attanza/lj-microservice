@@ -18,8 +18,8 @@ export class ReferralService {
   }
 
   async index(query: ResourcePaginationPipe): Promise<IApiCollection> {
-    const regexSearchable = ['code'];
-    const keyValueSearchable = ['code', 'maxConsumer', 'isExpired'];
+    const regexSearchable = ['code', 'consumer.email'];
+    const keyValueSearchable = ['code', 'maxConsumer', 'isExpired', 'creator.id'];
     return await getApiCollection(
       'Referral',
       this.referralModel,

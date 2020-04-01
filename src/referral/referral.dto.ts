@@ -1,14 +1,4 @@
-import {
-  IsArray,
-  IsDateString,
-  IsInt,
-  IsNotEmpty,
-  IsObject,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsArray, IsDateString, IsInt, IsNotEmpty, IsObject, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { IProduct, IUser } from './referral.interface';
 
 export class CreateReferralDto {
@@ -24,7 +14,7 @@ export class CreateReferralDto {
 
   @IsOptional()
   @IsArray()
-  products: IProduct[];
+  products?: IProduct[];
 
   @IsNotEmpty()
   @IsObject()
@@ -32,7 +22,11 @@ export class CreateReferralDto {
 
   @IsOptional()
   @IsInt()
-  maxConsumer: number;
+  maxConsumer?: number;
+
+  @IsOptional()
+  @IsArray()
+  consumer?: IUser[];
 
   @IsNotEmpty()
   @IsDateString()
