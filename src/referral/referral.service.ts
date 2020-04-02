@@ -6,7 +6,7 @@ import { Model } from 'mongoose';
 import { ResourcePaginationPipe } from 'src/shared/pipes/resource-pagination.pipe';
 import getApiCollection from '../helpers/getApiCollection';
 import { IApiCollection } from '../shared/interfaces/response-parser.interface';
-import { CreateReferralDto, UpdateReferralDto } from './referral.dto';
+import { CreateBulkReferralDto, CreateReferralDto, UpdateReferralDto } from './referral.dto';
 import { IReferral } from './referral.interface';
 @Injectable()
 export class ReferralService {
@@ -18,7 +18,7 @@ export class ReferralService {
   }
 
   async index(query: ResourcePaginationPipe): Promise<IApiCollection> {
-    const regexSearchable = ['code', 'consumer.email'];
+    const regexSearchable = ['code', 'consumer.email', 'creator.email'];
     const keyValueSearchable = ['code', 'maxConsumer', 'isExpired', 'creator.id'];
     return await getApiCollection(
       'Referral',
@@ -49,6 +49,10 @@ export class ReferralService {
     const newData = new this.referralModel(referralDto);
     await newData.save();
     return newData;
+  }
+
+  async bulkStore(referralDto: CreateBulkReferralDto) {
+    return this.referralModel.insertMany(referralDto.referrals)
   }
 
   async update(
@@ -113,6 +117,10 @@ export class ReferralService {
       return false;
     }
     return true;
+  }
+
+  async checkReferrals(key: string, value:any[]): Promise<IReferral[]> {
+    return this.referralModel.find({[key]: {$in: value}}).lean()
   }
 
   async getByCode(code: string): Promise<IReferral> {

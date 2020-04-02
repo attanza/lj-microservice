@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { apiCreated, apiDeleted, apiItem, apiUpdated } from '../helpers/responseParser';
 import { IApiCollection, IApiItem } from '../shared/interfaces/response-parser.interface';
 import { MongoIdPipe } from '../shared/pipes/mongoId.pipe';
 import { ResourcePaginationPipe } from '../shared/pipes/resource-pagination.pipe';
-import { CreateReferralDto, UpdateReferralDto } from './referral.dto';
+import { CreateBulkReferralDto, CreateReferralDto, UpdateReferralDto } from './referral.dto';
 import { ReferralService } from './referral.service';
 
 @Controller('api')
@@ -32,6 +32,22 @@ export class ReferralController {
   @UsePipes(ValidationPipe)
   async store(@Body() referralDto: CreateReferralDto): Promise<IApiItem> {
     const data = await this.referralService.store(referralDto);
+    return apiCreated('Referral', data);
+  }
+
+  @Post('/referrals-bulk')
+  @UsePipes(ValidationPipe)
+  async bulkStore(@Body() referralDto: CreateBulkReferralDto): Promise<IApiItem> {
+    const codes: string[] = referralDto.referrals.map(r => r.code)
+    const uniqueCodes: string[] = [...new Set(codes)]
+    if(codes.length !== uniqueCodes.length) {
+      throw new BadRequestException('One or more referral code already exists')
+    }
+    const referrals = await this.referralService.checkReferrals('code', codes)
+    if(referrals.length > 0) {
+      throw new BadRequestException('One or more referral code already exists')
+    }
+    const data = await this.referralService.bulkStore(referralDto);
     return apiCreated('Referral', data);
   }
 
