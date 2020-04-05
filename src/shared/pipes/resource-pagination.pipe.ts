@@ -1,4 +1,10 @@
-import { IsDateString, IsIn, IsNumberString, IsOptional, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsIn,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class ResourcePaginationPipe {
   @IsOptional()
@@ -42,7 +48,7 @@ export class ResourcePaginationPipe {
   fieldValue: string;
 
   @IsOptional()
-  select: string[];
+  select: string | string[];
 }
 
 export enum SortMode {
