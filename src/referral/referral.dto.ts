@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsDateString,
   IsInt,
   IsNotEmpty,
@@ -38,9 +39,9 @@ export class CreateReferralDto {
   @IsArray()
   consumer?: IUser[];
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsDateString()
-  validUntil?: Date;
+  validUntil: Date;
 }
 
 export class UpdateReferralDto {
@@ -73,6 +74,10 @@ export class UpdateReferralDto {
   @IsOptional()
   @IsDateString()
   validUntil: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  isExpired: boolean;
 }
 
 export class CreateBulkReferralDto {
