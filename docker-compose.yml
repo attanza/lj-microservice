@@ -9,7 +9,7 @@ services:
       - 27017:27017
 
   microservice:
-    build: ./lj_microservice
+    build: ./
     depends_on:
       - mongo
     ports:
