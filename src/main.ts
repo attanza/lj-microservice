@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import 'dotenv/config';
 import * as helmet from 'helmet';
 import { AppModule } from './app.module';
+import mqttHandler from './helpers/mqttHandler';
 import { AllExceptionsFilter } from './shared/http-exception.filter';
 
 async function bootstrap() {
@@ -17,6 +18,7 @@ async function bootstrap() {
   //     max: 50, // limit each IP to 100 requests per windowMs
   //   }),
   // );
+  mqttHandler.connect();
   await app.listen(port);
   Logger.log(`Server running at http://localhost:${port}`, 'Bootstrap');
 }
