@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Model } from 'mongoose';
 import { ResourcePaginationPipe } from 'src/shared/pipes/resource-pagination.pipe';
 import getApiCollection from '../helpers/getApiCollection';
+import mqttHandler from '../helpers/mqttHandler';
 import { IApiCollection } from '../shared/interfaces/response-parser.interface';
 import {
   CreateBulkReferralDto,
@@ -113,6 +114,7 @@ export class ReferralService {
         }
       }
       await data.save();
+      mqttHandler.sendMessage('referral/checkExpiry', 'referral/checkExpiry');
     }
     return data;
   }
@@ -139,5 +141,9 @@ export class ReferralService {
 
   async truncate() {
     await this.referralModel.deleteMany({});
+  }
+
+  async getNotExpiredReferral(): Promise<IReferral[]> {
+    return this.referralModel.find({ isExpired: false });
   }
 }

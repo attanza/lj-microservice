@@ -39,9 +39,9 @@ class MqttHandler {
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', (topic, message) => {
-      console.log('on message');
-      console.log(topic);
-      console.log(message.toString());
+      // console.log('on message');
+      // console.log(topic);
+      // console.log(message.toString());
     });
 
     this.mqttClient.on('close', () => {
